@@ -8,3 +8,4 @@ __pycache__/
 mlruns/
 mlflow.db
 logs/
+venv-monitoring/

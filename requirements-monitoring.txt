@@ -1,0 +1,4 @@
+pandas<3
+numpy<2
+pyyaml
+evidently==0.4.40
