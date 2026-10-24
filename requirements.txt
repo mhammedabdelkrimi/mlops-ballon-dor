@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn==1.9.1
+joblib
+pyyaml
+matplotlib
+seaborn
+mlflow
+dvc[s3]
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+requests
+pytest
+evidently==0.4.40

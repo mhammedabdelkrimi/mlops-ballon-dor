@@ -1,0 +1,23 @@
+# configs/params.yaml
+# Tous les réglages du projet au même endroit.
+# Pour tester une autre valeur, on modifie ce fichier, pas le code.
+
+data:
+  train_path: data/raw/entrainement_ballon_dor_2014_2025.csv   # données étiquetées (2014-2025)
+  valid_path: data/raw/candidats_ballon_dor_2026.csv           # candidats 2026 (sans gagnant)
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+model:
+  C: 0.3                       # force de régularisation de la régression logistique
+  class_weight: balanced       # "balanced" ou null (= aucun)
+  jeu_features: "Prétraité"    # "Baseline brute" | "Prétraité" | "Prétraité + FE"
+
+paths:
+  model: models/model.pkl
+  metrics: metrics/metrics.json
+
+mlflow:
+  experiment: ballon-dor

@@ -1,0 +1,11 @@
+services:
+  storage:
+    image: chrislusf/seaweedfs:4.47
+    command: server -dir=/data -s3 -s3.port=9000 -master.volumeSizeLimitMB=100
+    ports:
+      - "9000:9000"   # API S3 utilisée par DVC
+    volumes:
+      - storage_data:/data
+
+volumes:
+  storage_data:

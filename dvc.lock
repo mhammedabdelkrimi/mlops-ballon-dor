@@ -1,0 +1,38 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/raw/candidats_ballon_dor_2026.csv
+      hash: md5
+      md5: 5ec8f40db0928ea82815e73a8b0ab383
+      size: 4038
+    - path: data/raw/entrainement_ballon_dor_2014_2025.csv
+      hash: md5
+      md5: 4568375b2c51748a1a72f38b57ec8fe4
+      size: 38913
+    - path: src/train.py
+      hash: md5
+      md5: 3262fd870d66ea992542463f1711db21
+      size: 30729
+    params:
+      configs/params.yaml:
+        data:
+          train_path: data/raw/entrainement_ballon_dor_2014_2025.csv
+          valid_path: data/raw/candidats_ballon_dor_2026.csv
+        model:
+          C: 0.3
+          class_weight: balanced
+          jeu_features: Prétraité
+        split:
+          test_size: 0.2
+          random_state: 42
+    outs:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: fd5c329135953937694a7d8c3430cf80
+      size: 228
+    - path: models/model.pkl
+      hash: md5
+      md5: 992addf63bfcaad66b49cdb1a09d4a19
+      size: 6693

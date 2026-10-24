@@ -1,0 +1,5 @@
+outs:
+- md5: 4568375b2c51748a1a72f38b57ec8fe4
+  size: 38913
+  hash: md5
+  path: entrainement_ballon_dor_2014_2025.csv

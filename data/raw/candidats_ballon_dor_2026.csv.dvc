@@ -1,0 +1,5 @@
+outs:
+- md5: 5ec8f40db0928ea82815e73a8b0ab383
+  size: 4038
+  hash: md5
+  path: candidats_ballon_dor_2026.csv

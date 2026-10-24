@@ -1,0 +1,17 @@
+stages:
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - data/raw/entrainement_ballon_dor_2014_2025.csv
+      - data/raw/candidats_ballon_dor_2026.csv
+    params:
+      - configs/params.yaml:
+          - data
+          - split
+          - model
+    outs:
+      - models/model.pkl
+    metrics:
+      - metrics/metrics.json:
+          cache: false
