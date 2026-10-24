@@ -1,11 +1,23 @@
 services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    volumes: ["./logs:/app/logs"]
+
   storage:
     image: chrislusf/seaweedfs:4.47
     command: server -dir=/data -s3 -s3.port=9000 -master.volumeSizeLimitMB=100
-    ports:
-      - "9000:9000"   # API S3 utilisée par DVC
-    volumes:
-      - storage_data:/data
+    ports: ["9000:9000"]
+    volumes: ["storage_data:/data"]
+
+  init-bucket:
+    image: python:3.11-slim
+    depends_on: [storage]
+    environment:
+      S3_ENDPOINT: http://storage:9000
+    volumes: ["./scripts:/scripts:ro"]
+    command: sh -c "pip install -q botocore && python /scripts/create_bucket.py"
+    restart: "no"
 
 volumes:
   storage_data:
