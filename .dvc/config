@@ -3,3 +3,6 @@
 ['remote "storage"']
     url = s3://mlops-bucket
     endpointurl = http://localhost:9000
+['remote "dagshub"']
+    url = s3://dvc
+    endpointurl = https://dagshub.com/mhammedabdelkrimi/mlops-ballon-dor.s3
