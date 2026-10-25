@@ -9,3 +9,5 @@ mlruns/
 mlflow.db
 logs/
 venv-monitoring/
+
+reports/*.html
