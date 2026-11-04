@@ -13,8 +13,8 @@ stages:
       size: 38913
     - path: src/train.py
       hash: md5
-      md5: 3262fd870d66ea992542463f1711db21
-      size: 30729
+      md5: 62b24efa8f1585d113068817a7f33be5
+      size: 30251
     params:
       configs/params.yaml:
         data:
@@ -22,17 +22,38 @@ stages:
           valid_path: data/raw/candidats_ballon_dor_2026.csv
         model:
           C: 0.3
+          grid_search: true
+          grille_C:
+          - 0.001
+          - 0.003
+          - 0.01
+          - 0.03
+          - 0.1
+          - 0.3
+          - 1
+          - 3
+          - 10
+          - 30
+          - 100
           class_weight: balanced
           jeu_features: Prétraité
         split:
           test_size: 0.2
           random_state: 42
     outs:
+    - path: metrics/backtest.json
+      hash: md5
+      md5: f6c7b2d44e8294cd70437d2ad334d29b
+      size: 2391
+    - path: metrics/classement_2026.json
+      hash: md5
+      md5: adc594ac343ced8c7966056923ca777b
+      size: 3892
     - path: metrics/metrics.json
       hash: md5
       md5: fd5c329135953937694a7d8c3430cf80
       size: 228
     - path: models/model.pkl
       hash: md5
-      md5: 992addf63bfcaad66b49cdb1a09d4a19
-      size: 6693
+      md5: 462cb87c95859069dd2c512fe98c0ba0
+      size: 6704

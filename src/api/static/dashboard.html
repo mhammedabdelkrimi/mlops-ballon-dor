@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ballon d'Or Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0b1220;--panel:#131c2e;--panel2:#1a2540;--line:#243252;--text:#e6ebf5;--muted:#8a97b3;--gold:#f5b942;--gold2:#d99a1e;--ok:#34d399;--bad:#f87171}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.ic.lg{width:22px;height:22px}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 32px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#101a30,#0b1220)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;color:var(--gold)}
+.logo img{height:64px;width:auto;display:block}
+.brand h1{font-size:18px;font-weight:700}
+.brand p{font-size:12px;color:var(--muted)}
+.status{font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted);display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.on{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.dot.off{background:var(--bad)}
+nav{display:flex;gap:6px;padding:14px 32px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+nav button{display:flex;align-items:center;gap:8px;background:none;border:none;color:var(--muted);padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;font-family:inherit}
+nav button:hover{color:var(--text)}
+nav button.active{color:var(--gold);border-bottom-color:var(--gold)}
+main{padding:28px 32px;max-width:1400px;margin:0 auto}
+section{display:none}
+section.active{display:block}
+.grid{display:grid;gap:18px}
+.kpis{grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-bottom:18px}
+.two{grid-template-columns:repeat(auto-fit,minmax(420px,1fr));margin-bottom:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{font-size:14px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card h3 .ic{color:var(--gold)}
+.card .sub{font-size:12px;color:var(--muted);margin:-8px 0 14px}
+.kpi{position:relative}
+.kpi .kic{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:var(--panel2);color:var(--gold)}
+.kpi .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.kpi .value{font-size:30px;font-weight:700;margin-top:6px}
+.kpi .hint{font-size:12px;color:var(--muted);margin-top:4px}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.metric{background:var(--panel2);border-radius:10px;padding:10px;text-align:center}
+.metric b{display:block;font-size:18px;color:var(--gold)}
+.metric span{font-size:11px;color:var(--muted)}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.toolbar .f{min-width:180px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:6px;font-weight:500}
+select,input{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit}
+input::placeholder{color:#5d6a87}
+select:focus,input:focus{outline:none;border-color:var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line)}
+tr:hover td{background:rgba(255,255,255,.02)}
+.tbl-wrap{overflow-x:auto}
+.rank{width:30px;height:30px;border-radius:8px;display:inline-grid;place-items:center;background:var(--panel2);font-weight:700;font-size:13px}
+.rank.r1{background:var(--gold);color:#1a1200}
+.rank.r2{background:#cbd5e1;color:#111}
+.rank.r3{background:#c2884d;color:#111}
+.bar{height:8px;background:var(--panel2);border-radius:99px;overflow:hidden;min-width:120px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold2),var(--gold))}
+.tag{font-size:11px;padding:3px 9px;border-radius:99px;font-weight:600;white-space:nowrap}
+.tag.y{background:rgba(52,211,153,.15);color:var(--ok)}
+.tag.n{background:rgba(138,151,179,.15);color:var(--muted)}
+fieldset{border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+legend{padding:0 10px;font-size:13px;font-weight:600;color:var(--gold);display:flex;align-items:center;gap:8px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.req::after{content:" *";color:var(--gold)}
+button.primary{display:flex;align-items:center;justify-content:center;gap:10px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#1a1200;border:none;padding:14px 26px;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;width:100%;font-family:inherit}
+button.primary:hover{filter:brightness(1.08)}
+button.primary:disabled{opacity:.6;cursor:wait}
+.sim{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start}
+@media(max-width:1000px){.sim{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}}
+.result{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:340px;position:sticky;top:20px}
+#resBox{display:none;width:100%;flex-direction:column;align-items:center}
+#resBox.show{display:flex}
+.gauge{position:relative;width:100%;max-width:280px}
+.gauge svg{display:block;width:100%;height:auto}
+.gauge .val{position:absolute;left:0;right:0;bottom:2px;font-size:40px;font-weight:800;line-height:1}
+#gArc{transition:stroke-dasharray .7s ease}
+.lim{font-size:11px;color:var(--muted);margin-top:8px}
+.note{font-size:12px;color:var(--muted);margin-top:16px;max-width:300px;line-height:1.5}
+.verdict{margin-top:18px;padding:10px 16px;border-radius:10px;font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
+.verdict.ok{background:rgba(52,211,153,.15);color:var(--ok)}
+.verdict.no{background:rgba(138,151,179,.15);color:var(--muted)}
+.derived{display:flex;gap:24px;margin-top:18px;font-size:13px;color:var(--muted)}
+.derived b{display:block;color:var(--text);font-size:18px}
+.empty{color:var(--muted);font-size:14px;padding:20px;text-align:center}
+.err-box{background:rgba(248,113,113,.1);border:1px solid var(--bad);color:var(--bad);padding:12px 14px;border-radius:10px;font-size:13px;margin-top:14px;text-align:left}
+.chartbox{position:relative;height:320px}
+.podium{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pod{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;gap:14px;align-items:center}
+.pod.p1{border-color:var(--gold)}
+.pod .rank{width:38px;height:38px;font-size:16px}
+.pod .nm{font-weight:700;font-size:15px}
+.pod .st{font-size:12px;color:var(--muted);margin-top:4px}
+.pod .big{margin-left:auto;text-align:right}
+.pod .big b{display:block;font-size:22px;color:var(--gold)}
+.pod .big span{font-size:11px;color:var(--muted)}
+.bar.blue i{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><line x1="12" x2="12" y1="20" y2="10"/><line x1="18" x2="18" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="16"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></symbol>
+</svg>
+
+<header>
+  <div class="brand">
+    <div class="logo"><img src="/images/ballon-dor.png" alt="Ballon d'Or" onerror="this.outerHTML='&lt;svg class=&quot;ic lg&quot;&gt;&lt;use href=&quot;#i-trophy&quot;/&gt;&lt;/svg&gt;'"></div>
+    <div><h1>Ballon d'Or Analytics</h1><p>Suivi du modèle, classement et simulateur</p></div>
+  </div>
+  <div class="status"><span class="dot" id="dot"></span><span id="statusTxt">Vérification…</span></div>
+</header>
+
+<nav>
+  <button class="active" data-tab="overview"><svg class="ic"><use href="#i-chart"/></svg>Données &amp; performances</button>
+  <button data-tab="ranking"><svg class="ic"><use href="#i-award"/></svg>Classement des candidats 2026</button>
+  <button data-tab="sim"><svg class="ic"><use href="#i-target"/></svg>Simulateur</button>
+</nav>
+
+<main>
+<section id="overview" class="active">
+  <div class="grid kpis" id="kpis"></div>
+  <div class="grid two">
+    <div class="card"><h3><svg class="ic"><use href="#i-grid"/></svg>Rang du vrai gagnant par édition (1 = trouvé)</h3>
+      <div class="chartbox"><canvas id="chClasses"></canvas></div></div>
+    <div class="card"><h3><svg class="ic"><use href="#i-activity"/></svg>Exploration du jeu d'entraînement</h3>
+      <div class="toolbar"><div class="f"><label>Variable</label><select id="featSel"></select></div></div>
+      <div class="chartbox" style="height:270px"><canvas id="chDist"></canvas></div></div>
+  </div>
+  <div class="grid two" id="perf"></div>
+</section>
+
+<section id="ranking">
+  <div class="card" style="margin-bottom:18px">
+    <h3><svg class="ic"><use href="#i-award"/></svg>Classement des candidats 2026</h3>
+    <p class="sub">Deux lectures du même modèle : la probabilité de chaque joueur, puis le rapport de force entre les candidats.</p>
+    <div class="toolbar">
+      <div class="f" id="seasonWrap"><label>Édition</label><select id="seasonSel"></select></div>
+      <div class="f"><label>Nombre de joueurs</label>
+        <select id="limitSel"><option>5</option><option selected>10</option><option>20</option><option>50</option></select></div>
+    </div>
+    <div class="podium" id="podium"></div>
+  </div>
+  <div class="grid two">
+    <div class="card"><h3><svg class="ic"><use href="#i-target"/></svg>1 · Probabilité de gagner</h3>
+      <p class="sub">Sortie directe du modèle pour chaque joueur. Ces valeurs ne s'additionnent pas à 100 %.</p>
+      <div class="chartbox" id="rankChartBox"><canvas id="chRank"></canvas></div></div>
+    <div class="card"><h3><svg class="ic"><use href="#i-layers"/></svg>2 · Chances entre les candidats</h3>
+      <p class="sub">Part de chaque joueur parmi tous les candidats 2026. Le total fait 100 %.</p>
+      <div class="chartbox" id="shareChartBox"><canvas id="chShare"></canvas></div></div>
+  </div>
+  <div class="card tbl-wrap" style="margin-top:18px">
+    <table><thead><tr><th>Rang</th><th>Joueur</th><th>Édition</th><th>Probabilité de gagner</th><th></th><th>Chance entre candidats</th><th></th><th>Résultat</th></tr></thead>
+      <tbody id="rankBody"></tbody></table>
+    <div class="empty" id="rankEmpty" style="display:none"></div>
+  </div>
+</section>
+
+<section id="sim">
+  <div class="sim">
+    <form id="form" class="card" novalidate>
+      <h3><svg class="ic"><use href="#i-target"/></svg>Simuler la probabilité d'un joueur</h3>
+      <p class="sub">Renseignez les statistiques de la saison. Les champs marqués * sont obligatoires.</p>
+
+      <fieldset><legend><svg class="ic"><use href="#i-user"/></svg>Profil</legend>
+        <div class="fields"><div><label class="req">Poste</label>
+          <select name="poste" required>
+            <option value="" selected disabled>Choisir un poste…</option>
+            <option>Attaquant</option><option>Milieu</option><option>Defenseur</option><option>Gardien</option>
+          </select></div></div></fieldset>
+
+      <fieldset><legend><svg class="ic"><use href="#i-activity"/></svg>Saison en club</legend><div class="fields">
+        <div><label class="req">Matchs joués</label><input type="number" min="0" step="1" name="matchs_club_couverts" placeholder="ex : 50" required></div>
+        <div><label class="req">Minutes jouées</label><input type="number" min="1" step="1" name="minutes_club_couvertes" placeholder="ex : 4000" required></div>
+        <div><label class="req">Buts</label><input type="number" min="0" step="1" name="buts_club_couverts" placeholder="ex : 30" required></div>
+        <div><label class="req">Passes décisives</label><input type="number" min="0" step="1" name="passes_club_couvertes" placeholder="ex : 10" required></div>
+      </div></fieldset>
+
+      <fieldset><legend><svg class="ic"><use href="#i-globe"/></svg>Ligue des Champions</legend><div class="fields">
+        <div><label class="req">Matchs UCL</label><input type="number" min="0" step="1" name="matchs_ucl" placeholder="ex : 12" required></div>
+        <div><label class="req">Minutes UCL</label><input type="number" min="0" step="1" name="minutes_ucl" placeholder="ex : 1000" required></div>
+        <div><label class="req">Buts UCL</label><input type="number" min="0" step="1" name="buts_ucl" placeholder="ex : 8" required></div>
+        <div><label class="req">Passes décisives UCL</label><input type="number" min="0" step="1" name="passes_ucl" placeholder="ex : 3" required></div>
+      </div></fieldset>
+
+      <fieldset><legend><svg class="ic"><use href="#i-trophy"/></svg>Palmarès de la saison</legend><div class="fields">
+        <div><label>Club champion de l'UCL</label><select name="club_saison_champion_ucl"><option value="0">Non</option><option value="1">Oui</option></select></div>
+        <div><label>Club champion d'un top 5 européen</label><select name="club_saison_champion_top5"><option value="0">Non</option><option value="1">Oui</option></select></div>
+        <div><label>Sélection championne du monde</label><select name="selection_championne_cdm"><option value="0">Non</option><option value="1">Oui</option></select></div>
+        <div><label>Sélection championne Euro / Copa América</label><select name="selection_championne_euro_ou_copa"><option value="0">Non</option><option value="1">Oui</option></select></div>
+        <div><label>Meilleur joueur de l'UCL</label><select name="meilleur_joueur_ucl"><option value="0">Non</option><option value="1">Oui</option></select></div>
+        <div><label>Meilleur joueur d'une compétition de sélection</label><select name="meilleur_joueur_selection_majeure"><option value="0">Non</option><option value="1">Oui</option></select></div>
+      </div></fieldset>
+
+      <button class="primary" id="btn" type="submit"><svg class="ic"><use href="#i-play"/></svg><span id="btnTxt">Calculer la probabilité</span></button>
+      <div id="formErr"></div>
+    </form>
+
+    <div class="card result">
+      <div id="resEmpty" class="empty">Remplissez le formulaire puis lancez le calcul pour afficher la probabilité.</div>
+      <div id="resBox">
+        <div class="gauge">
+          <svg viewBox="0 0 220 124" aria-hidden="true">
+            <path d="M 20 110 A 90 90 0 0 1 200 110" pathLength="100" fill="none" stroke="#243252" stroke-width="16" stroke-linecap="round"/>
+            <path id="gArc" d="M 20 110 A 90 90 0 0 1 200 110" pathLength="100" fill="none" stroke="#f5b942" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 100"/>
+            <line x1="110" y1="8" x2="110" y2="32" stroke="#8a97b3" stroke-width="2"/>
+          </svg>
+          <div class="val" id="gVal">0 %</div>
+        </div>
+        <div class="lim">Trait vertical = seuil de 50 %</div>
+        <div class="verdict" id="verdict"></div>
+        <div class="derived">
+          <div><b id="d1">–</b>Buts / 90 min</div>
+          <div><b id="d2">–</b>Passes déc. / 90 min</div>
+        </div>
+        <p class="note">Probabilité brute du modèle pour ce joueur pris seul. Pour comparer des joueurs, utilise le classement 2026.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+const fmt = n => n.toLocaleString("fr-FR");
+const pct = (x, d = 1) => (x * 100).toFixed(d) + " %";
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const icon = (id, cls = "") => `<svg class="ic ${cls}"><use href="#i-${id}"/></svg>`;
+const GOLD = "#f5b942", GREY = "#64748b", GRID = "rgba(255,255,255,.07)";
+Chart.defaults.color = "#8a97b3";
+Chart.defaults.font.family = "Inter, system-ui, sans-serif";
+
+let charts = {};
+function draw(id, cfg) { if (charts[id]) charts[id].destroy(); charts[id] = new Chart($("#" + id), cfg); }
+async function api(url) {
+  const r = await fetch(url);
+  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.detail || r.status); }
+  return r.json();
+}
+
+/* Onglets */
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("nav button").forEach(x => x.classList.remove("active"));
+  document.querySelectorAll("section").forEach(x => x.classList.remove("active"));
+  b.classList.add("active"); $("#" + b.dataset.tab).classList.add("active");
+});
+
+/* Statut API */
+api("/health").then(h => {
+  $("#dot").className = "dot " + (h.model_loaded ? "on" : "off");
+  $("#statusTxt").textContent = h.model_loaded ? "API connectée · modèle chargé" : "API connectée · modèle absent";
+}).catch(() => { $("#dot").className = "dot off"; $("#statusTxt").textContent = "API injoignable"; });
+
+/* Vue d'ensemble : chiffres lus dans metrics/backtest.json (écrit par train.py) */
+async function loadOverview() {
+  let d;
+  try { d = await api("/dashboard/api/overview"); }
+  catch (e) { $("#kpis").innerHTML = `<div class="card empty" style="grid-column:1/-1">Impossible de charger les données : ${esc(e.message)}</div>`; return; }
+
+  const L = d.datasets.labelled, S = d.backtest.summary, cfg = d.config, per = d.backtest.per_edition;
+  const kpi = (ic, label, value, hint) => `<div class="card kpi"><div class="kic">${icon(ic, "lg")}</div>
+    <div class="label">${label}</div><div class="value">${value}</div><div class="hint">${hint}</div></div>`;
+  $("#kpis").innerHTML =
+    kpi("database", "Données étiquetées", fmt(L.rows), `Éditions ${L.period} · ${fmt(L.positives)} lauréats`) +
+    kpi("check", "Top-1 (par édition)", pct(S.top1, 0), `${cfg.n_editions} éditions testées`) +
+    kpi("layers", "Candidats 2026", fmt(d.datasets.candidates.rows), "à classer") +
+    kpi("layers", "Variables du modèle", cfg.n_features, `C = ${cfg.C} · ${esc(cfg.jeu_features)}`);
+
+  draw("chClasses", {type: "bar", data: {labels: per.map(r => r.edition),
+    datasets: [{data: per.map(r => r.rang), backgroundColor: per.map(r => r.rang === 1 ? GOLD : GREY), borderRadius: 6}]},
+    options: {maintainAspectRatio: false, plugins: {legend: {display: false}},
+      scales: {x: {grid: {display: false}}, y: {beginAtZero: true, ticks: {precision: 0}, grid: {color: GRID}}}}});
+
+  const sel = $("#featSel");
+  sel.innerHTML = d.numeric_columns.map(c => `<option>${esc(c)}</option>`).join("");
+  sel.onchange = () => loadDist(sel.value);
+  if (d.numeric_columns.length) loadDist(d.numeric_columns[0]);
+
+  $("#perf").innerHTML = perfCard(d.backtest);
+}
+
+function perfCard(b) {
+  const s = b.summary;
+  const items = [["Top-1", pct(s.top1, 0)], ["Top-3", pct(s.top3, 0)], ["Rang moyen", s.rang_moyen.toFixed(2)],
+                 ["F1", s.f1.toFixed(3)], ["Part moy. gagnant", s.part_gagnant_pct.toFixed(1) + " %"]];
+  return `<div class="card tbl-wrap" style="grid-column:1/-1">
+    <h3>${icon("activity")}Performances · validation par édition (Leave-One-Edition-Out)</h3>
+    <div class="metrics">${items.map(([l, v]) => `<div class="metric"><b>${v}</b><span>${l}</span></div>`).join("")}</div>
+    <table><thead><tr><th>Édition</th><th>Vrai gagnant</th><th>Prédit 1er</th><th>Rang du vrai gagnant</th><th>Part</th></tr></thead>
+    <tbody>${b.per_edition.map(r => `<tr><td>${r.edition}</td><td><b>${esc(r.gagnant)}</b></td><td>${esc(r.predit)}</td>
+      <td><span class="tag ${r.rang === 1 ? "y" : "n"}">${r.rang}</span></td><td>${r.part_gagnant_pct.toFixed(1)} %</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+async function loadDist(f) {
+  try {
+    const d = await api("/dashboard/api/distribution?feature=" + encodeURIComponent(f));
+    const labels = d.edges.slice(0, -1).map(e => `${e}`);
+    const colors = {"Non lauréat": "rgba(100,116,139,.75)", "Lauréat": "rgba(245,185,66,.85)"};
+    draw("chDist", {type: "bar", data: {labels, datasets: Object.entries(d.series).map(([n, v]) => ({label: n, data: v, backgroundColor: colors[n]}))},
+      options: {maintainAspectRatio: false, scales: {x: {grid: {display: false}, ticks: {maxTicksLimit: 8}}, y: {grid: {color: GRID}}}}});
+  } catch (e) { /* variable indisponible */ }
+}
+
+/* Classement 2026 : (1) probabilité réelle du modèle, (2) chance relative entre candidats */
+const BLUE = "#60a5fa";
+async function loadRanking() {
+  const season = $("#seasonSel").value || "all", limit = $("#limitSel").value;
+  const boxes = document.querySelectorAll("#ranking .chartbox");
+  let d;
+  try { d = await api(`/dashboard/api/ranking?season=${encodeURIComponent(season)}&limit=${limit}`); }
+  catch (e) {
+    $("#rankBody").innerHTML = ""; $("#podium").innerHTML = "";
+    boxes.forEach(b => b.style.display = "none");
+    $("#rankEmpty").style.display = "block"; $("#rankEmpty").textContent = "Classement indisponible : " + e.message; return;
+  }
+  boxes.forEach(b => b.style.display = "block"); $("#rankEmpty").style.display = "none";
+
+  const sSel = $("#seasonSel");
+  if (!sSel.options.length) {
+    if (d.seasons.length > 1) sSel.innerHTML = `<option value="all">Toutes</option>` + d.seasons.map(s => `<option>${esc(s)}</option>`).join("");
+    else $("#seasonWrap").style.display = "none";
+  }
+
+  const rows = d.rows, names = rows.map(r => r.name);
+  const h = Math.max(300, rows.length * 34) + "px";
+  $("#rankChartBox").style.height = h; $("#shareChartBox").style.height = h;
+  const colors = (full, soft) => rows.map((r, i) => i === 0 ? full : soft);
+  const yAxis = {grid: {display: false}};
+
+  draw("chRank", {type: "bar", data: {labels: names,
+    datasets: [{data: rows.map(r => r.proba), backgroundColor: colors(GOLD, "rgba(245,185,66,.45)"), borderRadius: 6}]},
+    options: {indexAxis: "y", maintainAspectRatio: false,
+      plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => pct(c.raw)}}},
+      scales: {x: {min: 0, max: 1, grid: {color: GRID}, ticks: {callback: v => v * 100 + " %"}}, y: yAxis}}});
+
+  draw("chShare", {type: "bar", data: {labels: names,
+    datasets: [{data: rows.map(r => r.part), backgroundColor: colors(BLUE, "rgba(96,165,250,.45)"), borderRadius: 6}]},
+    options: {indexAxis: "y", maintainAspectRatio: false,
+      plugins: {legend: {display: false}, tooltip: {callbacks: {label: c => c.raw.toFixed(1) + " %"}}},
+      scales: {x: {min: 0, grid: {color: GRID}, ticks: {callback: v => v + " %"}}, y: yAxis}}});
+
+  $("#podium").innerHTML = rows.slice(0, 3).map(r => `<div class="pod ${r.rank === 1 ? "p1" : ""}">
+    <span class="rank r${r.rank}">${r.rank}</span>
+    <div><div class="nm">${esc(r.name)}</div><div class="st">Probabilité : ${pct(r.proba)}</div></div>
+    <div class="big"><b>${r.part.toFixed(1)} %</b><span>chance entre candidats</span></div></div>`).join("");
+
+  $("#rankBody").innerHTML = rows.map(r => `<tr>
+    <td><span class="rank ${r.rank <= 3 ? "r" + r.rank : ""}">${r.rank}</span></td>
+    <td><b>${esc(r.name)}</b></td><td>${r.season ? esc(r.season) : "–"}</td>
+    <td>${pct(r.proba)}</td><td><div class="bar"><i style="width:${r.proba * 100}%"></i></div></td>
+    <td>${r.part.toFixed(1)} %</td><td><div class="bar blue"><i style="width:${Math.min(100, r.part * 4)}%"></i></div></td>
+    <td>${r.actual === null ? '<span class="tag n">À venir</span>' : r.actual === 1 ? '<span class="tag y">Lauréat</span>' : '<span class="tag n">Non</span>'}</td></tr>`).join("");
+}
+$("#seasonSel").onchange = loadRanking; $("#limitSel").onchange = loadRanking;
+
+/* Simulateur (appelle /predict de main.py) */
+$("#form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const f = ev.target, box = $("#formErr"); box.innerHTML = "";
+  if (!f.checkValidity()) { f.reportValidity(); return; }
+  const v = Object.fromEntries(new FormData(f));
+  const p = {poste: v.poste};
+  Object.keys(v).filter(k => k !== "poste").forEach(k => p[k] = parseInt(v[k], 10));
+  p.buts_par_90_club = +(p.buts_club_couverts / p.minutes_club_couvertes * 90).toFixed(3);
+  p.passes_par_90_club = +(p.passes_club_couvertes / p.minutes_club_couvertes * 90).toFixed(3);
+
+  const btn = $("#btn"); btn.disabled = true; $("#btnTxt").textContent = "Calcul en cours…";
+  try {
+    const r = await fetch("/predict", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(p)});
+    const j = await r.json();
+    if (!r.ok) {
+      const det = Array.isArray(j.detail) ? j.detail.map(e => `${esc(e.champ)} : ${esc(e.message)}`).join("<br>") : esc(j.detail);
+      box.innerHTML = `<div class="err-box">${det}</div>`; return;
+    }
+    showResult(j.probabilite_ballon_dor, p);
+  } catch (e) { box.innerHTML = `<div class="err-box">API injoignable.</div>`; }
+  finally { btn.disabled = false; $("#btnTxt").textContent = "Calculer la probabilité"; }
+});
+
+function showResult(proba, p) {
+  $("#resEmpty").style.display = "none";
+  $("#resBox").classList.add("show");
+  $("#gVal").textContent = pct(proba);
+  $("#gArc").setAttribute("stroke-dasharray", `${Math.min(100, Math.max(0.8, proba * 100))} 100`);
+  const v = $("#verdict"), fav = proba >= 0.5;
+  v.className = "verdict " + (fav ? "ok" : "no");
+  v.innerHTML = icon(fav ? "check" : "minus") + (fav ? "Candidat favori pour le Ballon d'Or" : "Profil sous le seuil de 50 %");
+  $("#d1").textContent = p.buts_par_90_club; $("#d2").textContent = p.passes_par_90_club;
+}
+
+loadOverview(); loadRanking();
+</script>
+</body>
+</html>

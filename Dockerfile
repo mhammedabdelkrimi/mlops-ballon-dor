@@ -5,5 +5,8 @@ RUN pip install --no-cache-dir -r requirements-api.txt
 COPY src/__init__.py src/__init__.py
 COPY src/api/ src/api/
 COPY models/ models/
+COPY metrics/ metrics/
+COPY images/ images/
+COPY data/raw/ data/raw/
 EXPOSE 8000
 CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

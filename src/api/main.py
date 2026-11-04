@@ -9,14 +9,24 @@ import pandas as pd
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
+
+from src.api.dashboard import router as dashboard_router
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 MODEL_PATH = BASE_DIR / "models" / "model.pkl"
 LOG_PATH = BASE_DIR / "logs" / "predictions.csv"
+IMAGES_DIR = BASE_DIR / "images"
 
 app = FastAPI(title="API Ballon d'Or")
 bundle = joblib.load(MODEL_PATH) if MODEL_PATH.exists() else None
+
+app.include_router(dashboard_router)
+
+# Sert le logo : http://127.0.0.1:8000/images/ballon-dor.png
+if IMAGES_DIR.exists():
+    app.mount("/images", StaticFiles(directory=IMAGES_DIR), name="images")
 
 
 class Joueur(BaseModel):
@@ -82,7 +92,7 @@ def predict(joueur: Joueur):
     proba = float(bundle["model"].predict_proba(X)[0][1])
 
     # Journal des requêtes, utilisé par le monitoring de dérive
-    LOG_PATH.parent.mkdir(exist_ok=True)
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     nouveau = not LOG_PATH.exists()
     with open(LOG_PATH, "a", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
