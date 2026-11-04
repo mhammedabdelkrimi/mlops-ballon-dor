@@ -1,0 +1,170 @@
+[
+  {
+    "rang": 1,
+    "joueur": "Harry Kane",
+    "chance_pct": 16.092071303099786,
+    "proba_brute": 0.8290704795303484
+  },
+  {
+    "rang": 2,
+    "joueur": "Kylian Mbappé",
+    "chance_pct": 14.524868495735431,
+    "proba_brute": 0.7483275124784569
+  },
+  {
+    "rang": 3,
+    "joueur": "Lamine Yamal",
+    "chance_pct": 14.517940585943826,
+    "proba_brute": 0.7479705835670145
+  },
+  {
+    "rang": 4,
+    "joueur": "Ousmane Dembélé",
+    "chance_pct": 10.197817446955044,
+    "proba_brute": 0.5253959693356166
+  },
+  {
+    "rang": 5,
+    "joueur": "Khvicha Kvaratskhelia",
+    "chance_pct": 9.05450890581528,
+    "proba_brute": 0.4664922183765156
+  },
+  {
+    "rang": 6,
+    "joueur": "Michael Olise",
+    "chance_pct": 7.705474583309476,
+    "proba_brute": 0.3969893861061078
+  },
+  {
+    "rang": 7,
+    "joueur": "Lionel Messi",
+    "chance_pct": 5.203908377140586,
+    "proba_brute": 0.26810761227716323
+  },
+  {
+    "rang": 8,
+    "joueur": "Erling Haaland",
+    "chance_pct": 3.2924362453478233,
+    "proba_brute": 0.16962774060215666
+  },
+  {
+    "rang": 9,
+    "joueur": "Fabián Ruiz",
+    "chance_pct": 3.2633404342766403,
+    "proba_brute": 0.16812871182066824
+  },
+  {
+    "rang": 10,
+    "joueur": "Luis Díaz",
+    "chance_pct": 2.876242694971305,
+    "proba_brute": 0.14818526872337304
+  },
+  {
+    "rang": 11,
+    "joueur": "Achraf Hakimi",
+    "chance_pct": 2.2653798341723825,
+    "proba_brute": 0.11671334970246444
+  },
+  {
+    "rang": 12,
+    "joueur": "Nuno Mendes",
+    "chance_pct": 1.9563627372939054,
+    "proba_brute": 0.10079265510283486
+  },
+  {
+    "rang": 13,
+    "joueur": "João Neves",
+    "chance_pct": 1.8241870810683463,
+    "proba_brute": 0.09398290807741284
+  },
+  {
+    "rang": 14,
+    "joueur": "Vitinha",
+    "chance_pct": 1.4961542523095088,
+    "proba_brute": 0.07708251473970756
+  },
+  {
+    "rang": 15,
+    "joueur": "Vinícius Júnior",
+    "chance_pct": 1.4091319015337218,
+    "proba_brute": 0.07259908555718571
+  },
+  {
+    "rang": 16,
+    "joueur": "Willian Pacho",
+    "chance_pct": 1.0789042419293204,
+    "proba_brute": 0.055585613584210575
+  },
+  {
+    "rang": 17,
+    "joueur": "Marquinhos",
+    "chance_pct": 0.5394672231196868,
+    "proba_brute": 0.027793584861669732
+  },
+  {
+    "rang": 18,
+    "joueur": "Declan Rice",
+    "chance_pct": 0.4767513040378913,
+    "proba_brute": 0.024562433561879333
+  },
+  {
+    "rang": 19,
+    "joueur": "Bruno Fernandes",
+    "chance_pct": 0.3718122741774208,
+    "proba_brute": 0.019155929317077058
+  },
+  {
+    "rang": 20,
+    "joueur": "Lautaro Martínez",
+    "chance_pct": 0.35084230032584224,
+    "proba_brute": 0.0180755471866848
+  },
+  {
+    "rang": 21,
+    "joueur": "Rodri",
+    "chance_pct": 0.3224723498963212,
+    "proba_brute": 0.01661391505966803
+  },
+  {
+    "rang": 22,
+    "joueur": "Ferran Torres",
+    "chance_pct": 0.30867447315887414,
+    "proba_brute": 0.01590304247727944
+  },
+  {
+    "rang": 23,
+    "joueur": "Gabriel Magalhães",
+    "chance_pct": 0.23632657135440566,
+    "proba_brute": 0.012175647258089038
+  },
+  {
+    "rang": 24,
+    "joueur": "Dayot Upamecano",
+    "chance_pct": 0.23163749550097096,
+    "proba_brute": 0.011934064040295787
+  },
+  {
+    "rang": 25,
+    "joueur": "Jude Bellingham",
+    "chance_pct": 0.1476190946387795,
+    "proba_brute": 0.007605399657683203
+  },
+  {
+    "rang": 26,
+    "joueur": "Pau Cubarsí",
+    "chance_pct": 0.0966632837234426,
+    "proba_brute": 0.004980134221387356
+  },
+  {
+    "rang": 27,
+    "joueur": "Marc Cucurella",
+    "chance_pct": 0.08025966887700782,
+    "proba_brute": 0.004135012883642281
+  },
+  {
+    "rang": 28,
+    "joueur": "William Saliba",
+    "chance_pct": 0.07874484028696724,
+    "proba_brute": 0.004056968258938853
+  }
+]

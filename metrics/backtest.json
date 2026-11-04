@@ -1,0 +1,99 @@
+{
+  "config": {
+    "jeu_features": "Prétraité",
+    "class_weight": "balanced",
+    "C": 0.3,
+    "grid_search": true,
+    "n_features": 19,
+    "n_editions": 11,
+    "n_candidats": 311
+  },
+  "summary": {
+    "top1": 0.7272727272727273,
+    "top3": 1.0,
+    "rang_moyen": 1.2727272727272727,
+    "part_gagnant_pct": 22.058418264024215,
+    "precision": 0.7272727272727273,
+    "recall": 0.7272727272727273,
+    "f1": 0.7272727272727273
+  },
+  "per_edition": [
+    {
+      "edition": 2014,
+      "gagnant": "Cristiano Ronaldo",
+      "predit": "Cristiano Ronaldo",
+      "rang": 1,
+      "part_gagnant_pct": 22.885491253588345
+    },
+    {
+      "edition": 2015,
+      "gagnant": "Lionel Messi",
+      "predit": "Lionel Messi",
+      "rang": 1,
+      "part_gagnant_pct": 24.263443940620164
+    },
+    {
+      "edition": 2016,
+      "gagnant": "Cristiano Ronaldo",
+      "predit": "Cristiano Ronaldo",
+      "rang": 1,
+      "part_gagnant_pct": 21.172400179547598
+    },
+    {
+      "edition": 2017,
+      "gagnant": "Cristiano Ronaldo",
+      "predit": "Lionel Messi",
+      "rang": 2,
+      "part_gagnant_pct": 15.363698177966759
+    },
+    {
+      "edition": 2018,
+      "gagnant": "Luka Modrić",
+      "predit": "Luka Modrić",
+      "rang": 1,
+      "part_gagnant_pct": 16.26458522670991
+    },
+    {
+      "edition": 2019,
+      "gagnant": "Lionel Messi",
+      "predit": "Lionel Messi",
+      "rang": 1,
+      "part_gagnant_pct": 29.93949063142064
+    },
+    {
+      "edition": 2021,
+      "gagnant": "Lionel Messi",
+      "predit": "Lionel Messi",
+      "rang": 1,
+      "part_gagnant_pct": 34.57032485680093
+    },
+    {
+      "edition": 2022,
+      "gagnant": "Karim Benzema",
+      "predit": "Karim Benzema",
+      "rang": 1,
+      "part_gagnant_pct": 24.83612628171909
+    },
+    {
+      "edition": 2023,
+      "gagnant": "Lionel Messi",
+      "predit": "Erling Haaland",
+      "rang": 2,
+      "part_gagnant_pct": 15.237021320526567
+    },
+    {
+      "edition": 2024,
+      "gagnant": "Rodri",
+      "predit": "Vinícius Júnior",
+      "rang": 2,
+      "part_gagnant_pct": 21.72858346599286
+    },
+    {
+      "edition": 2025,
+      "gagnant": "Ousmane Dembélé",
+      "predit": "Ousmane Dembélé",
+      "rang": 1,
+      "part_gagnant_pct": 16.381435569373497
+    }
+  ]
+}

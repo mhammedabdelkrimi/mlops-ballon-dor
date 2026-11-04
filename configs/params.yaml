@@ -11,13 +11,17 @@ split:
   random_state: 42
 
 model:
-  C: 0.3                       # force de régularisation de la régression logistique
+  C: 0.3                       # utilisé tel quel si grid_search est false
+  grid_search: true            # true = train.py cherche le meilleur C (comme le notebook)
+  grille_C: [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30, 100]
   class_weight: balanced       # "balanced" ou null (= aucun)
   jeu_features: "Prétraité"    # "Baseline brute" | "Prétraité" | "Prétraité + FE"
 
 paths:
   model: models/model.pkl
   metrics: metrics/metrics.json
+  backtest: metrics/backtest.json
+  classement: metrics/classement_2026.json
 
 mlflow:
   experiment: ballon-dor

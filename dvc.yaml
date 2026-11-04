@@ -15,3 +15,7 @@ stages:
     metrics:
       - metrics/metrics.json:
           cache: false
+      - metrics/backtest.json:
+          cache: false
+      - metrics/classement_2026.json:
+          cache: false
